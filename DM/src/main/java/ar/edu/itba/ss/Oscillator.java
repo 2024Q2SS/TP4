@@ -22,6 +22,8 @@ public abstract class Oscillator {
         this.a = a;
         this.t = t;
         this.dt = dt;
+
+        initializeValues();
     }
 
     public Double getM() {
@@ -88,4 +90,7 @@ public abstract class Oscillator {
         this.dt = dt;
     }
 
+    public abstract void step();
+
+    public abstract void initializeValues();
 }
