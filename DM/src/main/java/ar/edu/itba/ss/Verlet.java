@@ -9,6 +9,11 @@ public class Verlet extends Oscillator implements IntegrationMethod {
 
     }
 
+    @Override
+    public Oscillator create(){
+        return new Verlet(getM(), getK(), getGamma(), getR(), getV(), getA(), getT(), getDt());
+    }
+
     public void initializeValues() {
         Double vPrev = getV() - getDt() * getA();
         rPrev = getR() - getDt() * vPrev + getDt() * getDt() * getA() / 2;

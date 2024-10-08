@@ -8,6 +8,12 @@ public class Beeman extends Oscillator {
         super(m, k, gamma, r, v, a, t, dt);
     }
 
+    @Override
+    public Oscillator create(){
+        return new Beeman(getM(), getK(), getGamma(), getR(), getV(), getA(), getT(), getDt());
+    }
+
+
     public void initializeValues() {
         double vPrev = getV() + getDt() * getA();
         double rPrev = getR() + getDt() * vPrev + getDt() * getDt() * getA() / 2;

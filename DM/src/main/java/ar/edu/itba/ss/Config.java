@@ -11,9 +11,10 @@ public class Config {
     private Double dt;
     private String method;
     private Integer steps;
+    private Integer N;
 
     public Config(Double mass, Double k, Double gamma, Double r0, Double v0, Double a0, Double t0, Double dt,
-            String method, Integer steps) {
+            String method, Integer steps, Integer N) {
         this.mass = mass;
         this.k = k;
         this.gamma = gamma;
@@ -24,7 +25,10 @@ public class Config {
         this.dt = dt;
         this.method = method;
         this.steps = steps;
+        this.N = N;
     }
+
+
 
     public Double getMass() {
         return mass;
@@ -112,4 +116,16 @@ public class Config {
     public void setSteps(Integer steps) {
         this.steps = steps;
     }
+
+
+
+	public Integer getN() {
+		return N;
+	}
+
+
+
+	public void setN(Integer n) {
+		N = n;
+	}
 }

@@ -26,6 +26,9 @@ public abstract class Oscillator {
         initializeValues();
     }
 
+    public abstract Oscillator create();
+
+
     public Double getM() {
         return m;
     }

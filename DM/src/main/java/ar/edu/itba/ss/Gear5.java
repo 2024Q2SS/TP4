@@ -14,7 +14,10 @@ public class Gear5 extends Oscillator implements IntegrationMethod {
     public Gear5(Double m, Double k, Double gamma, Double r, Double v, Double a, Double t, Double dt) {
         super(m, k, gamma, r, v, a, t, dt);
     }
-
+    @Override
+    public Oscillator create(){
+        return new Gear5(getM(), getK(), getGamma(), getR(), getV(), getA(), getT(), getDt());
+    }
     @Override
     public void initializeValues() {
         this.r3 = (-getK() * getV() - getGamma() * getA()) / getM();
