@@ -1,6 +1,8 @@
 package ar.edu.itba.ss;
 
 public abstract class Oscillator {
+    private Double y;
+    private Double oldY;
 
     private Double m;
     private Double k;
@@ -22,12 +24,18 @@ public abstract class Oscillator {
         this.a = a;
         this.t = t;
         this.dt = dt;
+        this.y = 0.0;
 
         initializeValues();
     }
 
     public abstract Oscillator create();
+    
+    public abstract void coupledStep(Double prevY, Double nextY);
 
+    public abstract void firstStep();
+
+    public abstract void lastStep();
 
     public Double getM() {
         return m;
@@ -96,4 +104,12 @@ public abstract class Oscillator {
     public abstract void step();
 
     public abstract void initializeValues();
+
+	public Double getY() {
+		return y;
+	}
+
+	public void setY(Double y) {
+		this.y = y;
+	}
 }

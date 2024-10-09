@@ -1,6 +1,8 @@
 package ar.edu.itba.ss;
 
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -21,14 +23,6 @@ public class CoupledOscillator {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-    }
-
-    public CoupledOscillator() {
-
-    }
-
-    public void run() {
         Oscillator creator;
         switch(config.getMethod()){
             case "Verlet":
@@ -55,6 +49,42 @@ public class CoupledOscillator {
         }
         for (int i = 0; i < config.getN(); i++) {
             oscillators.add(creator.create());
+        }
+
+       
+    }
+
+    public CoupledOscillator() {
+
+    }
+
+    public void run() {
+            try (FileWriter writer = new FileWriter(config.getMethod() + "_output.csv")) {
+            writer.write("t,r,v,a\n");
+            Double prevY = 0.0;
+            Double currentY = 0.0;
+            Oscillator aux;
+            for (int i = 0; i < config.getSteps(); i++) {
+                for (int j = 0; j<oscillators.size();j++) {
+                    aux = oscillators.get(j);
+                    currentY = aux.getR();
+                    if(j==0)
+                        aux.firstStep();
+                    else if(j == oscillators.size()-1)
+                        aux.lastStep();
+                    else{
+                        aux.coupledStep(currentY,oscillators.get(j+1).getR());
+                    }
+                    prevY = currentY;
+                    for (Oscillator toWrite : oscillators) {
+                        
+                        writer.write(toWrite.getT() + "," + toWrite.getR() + "," + toWrite.getV() + ","
+                            + toWrite.getA() + "\n");
+                    }
+            }
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 

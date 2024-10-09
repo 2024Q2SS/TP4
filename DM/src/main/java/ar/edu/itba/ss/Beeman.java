@@ -12,8 +12,21 @@ public class Beeman extends Oscillator {
     public Oscillator create(){
         return new Beeman(getM(), getK(), getGamma(), getR(), getV(), getA(), getT(), getDt());
     }
+    
+    @Override
+    public void coupledStep(Double prevY, Double nextY){
 
+    }
 
+    @Override
+    public void firstStep(){
+
+    }
+    
+    @Override
+    public void lastStep(){
+
+    }
     public void initializeValues() {
         double vPrev = getV() + getDt() * getA();
         double rPrev = getR() + getDt() * vPrev + getDt() * getDt() * getA() / 2;
