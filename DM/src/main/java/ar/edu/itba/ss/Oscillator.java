@@ -33,7 +33,7 @@ public abstract class Oscillator {
     
     public abstract void coupledStep(Double prevY, Double nextY);
 
-    public abstract void firstStep();
+    public abstract void firstStep(Double A, Integer omega);
 
     public abstract void lastStep();
 

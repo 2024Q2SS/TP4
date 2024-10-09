@@ -69,15 +69,14 @@ public class CoupledOscillator {
                     aux = oscillators.get(j);
                     currentY = aux.getR();
                     if(j==0)
-                        aux.firstStep();
+                        aux.firstStep(config.getA(),config.getOmega());
                     else if(j == oscillators.size()-1)
-                        aux.lastStep();
+                        aux.lastStep();//cambiar por un break? nose
                     else{
                         aux.coupledStep(currentY,oscillators.get(j+1).getR());
                     }
                     prevY = currentY;
                     for (Oscillator toWrite : oscillators) {
-                        
                         writer.write(toWrite.getT() + "," + toWrite.getR() + "," + toWrite.getV() + ","
                             + toWrite.getA() + "\n");
                     }

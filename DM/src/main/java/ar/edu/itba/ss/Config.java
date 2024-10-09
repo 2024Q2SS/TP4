@@ -12,9 +12,11 @@ public class Config {
     private String method;
     private Integer steps;
     private Integer N;
+    private Double A;
+    private Integer omega;
 
     public Config(Double mass, Double k, Double gamma, Double r0, Double v0, Double a0, Double t0, Double dt,
-            String method, Integer steps, Integer N) {
+            String method, Integer steps, Integer N,Double A,Integer omega) {
         this.mass = mass;
         this.k = k;
         this.gamma = gamma;
@@ -26,6 +28,8 @@ public class Config {
         this.method = method;
         this.steps = steps;
         this.N = N;
+        this.A = A;
+        this.omega = omega;
     }
 
 
@@ -127,5 +131,29 @@ public class Config {
 
 	public void setN(Integer n) {
 		N = n;
+	}
+
+
+
+	public Double getA() {
+		return A;
+	}
+
+
+
+	public void setA(Double a) {
+		A = a;
+	}
+
+
+
+	public Integer getOmega() {
+		return omega;
+	}
+
+
+
+	public void setOmega(Integer omega) {
+		this.omega = omega;
 	}
 }
