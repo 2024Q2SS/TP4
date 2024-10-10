@@ -16,11 +16,11 @@ public class Verlet extends Oscillator implements IntegrationMethod {
 
     @Override
     public void coupledStep(Double prevY, Double nextY) {
-        double force = -getK() * (2 * getR() - prevY - nextY);
+        double force = (-getK() * (getR() - prevY) - getK() * (getR() - nextY));
 
         double newA = force / getM();
 
-        double rNext = 2 * getR() - rPrev + newA * getDt() * getDt();
+        double rNext = 2 * getR() - rPrev + (newA * getDt() * getDt());
 
         double newV = (rNext - rPrev) / (2 * getDt());
 

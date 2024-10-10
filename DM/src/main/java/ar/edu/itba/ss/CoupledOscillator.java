@@ -56,7 +56,7 @@ public class CoupledOscillator {
     }
 
     public void run() {
-        try (FileWriter writer = new FileWriter(config.getMethod() + "_output.csv")) {
+        try (FileWriter writer = new FileWriter("output.csv")) {
             writer.write("t,r,v,a\n");
             Double prevY = config.getR0();
             Double currentY;

@@ -4,6 +4,7 @@
 DM/.classpath
 DM/.project
 DM/.settings/*
+DM/target/*
 
 # Log file
 *.log
