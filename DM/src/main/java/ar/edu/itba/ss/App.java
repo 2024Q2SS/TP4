@@ -1,10 +1,5 @@
 package ar.edu.itba.ss;
 
-/**
- * Hello world!
- *
- */
-
 import com.google.gson.Gson;
 import java.nio.file.Paths;
 import java.io.FileReader;

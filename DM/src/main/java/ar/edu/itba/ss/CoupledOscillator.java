@@ -14,17 +14,17 @@ public class CoupledOscillator {
 
     private static Config config;
     private ArrayList<Oscillator> oscillators;
-    private Double acceleration;
-    public void setUp() {
 
+    public void setUp() {
         configPath = Paths.get(rootDir, configPath).toString();
         try (FileReader reader = new FileReader(configPath)) {
             config = new Gson().fromJson(reader, Config.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        oscillators = new ArrayList<>();
         Oscillator creator;
-        switch(config.getMethod()){
+        switch (config.getMethod()) {
             case "Verlet":
                 creator = new Verlet(config.getMass(), config.getK(), config.getGamma(), config.getR0(),
                         config.getV0(),
@@ -45,13 +45,10 @@ public class CoupledOscillator {
             default:
                 throw new RuntimeException("Unknown method: " + config.getMethod());
 
- 
         }
         for (int i = 0; i < config.getN(); i++) {
             oscillators.add(creator.create());
         }
-
-       
     }
 
     public CoupledOscillator() {
@@ -59,33 +56,37 @@ public class CoupledOscillator {
     }
 
     public void run() {
-            try (FileWriter writer = new FileWriter(config.getMethod() + "_output.csv")) {
+        try (FileWriter writer = new FileWriter(config.getMethod() + "_output.csv")) {
             writer.write("t,r,v,a\n");
-            Double prevY = 0.0;
-            Double currentY = 0.0;
+            Double prevY = config.getR0();
+            Double currentY;
             Oscillator aux;
+            for (Oscillator toWrite : oscillators) {
+                writer.write(toWrite.getT() + "," + toWrite.getR() + "," + toWrite.getV() + ","
+                        + toWrite.getA() + "\n");
+            }
+
             for (int i = 0; i < config.getSteps(); i++) {
-                for (int j = 0; j<oscillators.size();j++) {
+                for (int j = 0; j < oscillators.size(); j++) {
                     aux = oscillators.get(j);
                     currentY = aux.getR();
-                    if(j==0)
-                        aux.firstStep(config.getA(),config.getOmega());
-                    else if(j == oscillators.size()-1)
-                        aux.lastStep();//cambiar por un break? nose
-                    else{
-                        aux.coupledStep(currentY,oscillators.get(j+1).getR());
+                    if (j == 0) {
+                        aux.firstStep(config.getA(), config.getOmega());
+                    } else if (j == oscillators.size() - 1) {
+                        aux.lastStep();
+                    } else {
+                        aux.coupledStep(prevY, oscillators.get(j + 1).getR());
                     }
                     prevY = currentY;
-                    for (Oscillator toWrite : oscillators) {
-                        writer.write(toWrite.getT() + "," + toWrite.getR() + "," + toWrite.getV() + ","
+                }
+                for (Oscillator toWrite : oscillators) {
+                    writer.write(toWrite.getT() + "," + toWrite.getR() + "," + toWrite.getV() + ","
                             + toWrite.getA() + "\n");
-                    }
+                }
             }
-        }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 

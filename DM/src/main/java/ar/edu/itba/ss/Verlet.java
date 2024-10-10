@@ -10,22 +10,37 @@ public class Verlet extends Oscillator implements IntegrationMethod {
     }
 
     @Override
-    public Oscillator create(){
+    public Oscillator create() {
         return new Verlet(getM(), getK(), getGamma(), getR(), getV(), getA(), getT(), getDt());
     }
 
     @Override
-    public void coupledStep(Double prevY, Double nextY){
+    public void coupledStep(Double prevY, Double nextY) {
+        double force = -getK() * (2 * getR() - prevY - nextY);
 
+        double newA = force / getM();
+
+        double rNext = 2 * getR() - rPrev + newA * getDt() * getDt();
+
+        double newV = (rNext - rPrev) / (2 * getDt());
+
+        rPrev = getR();
+
+        setA(newA);
+        setV(newV);
+        setR(rNext);
+        this.setT(this.getT() + this.getDt());
     }
-    @Override
-    public void firstStep(){
 
+    @Override
+    public void firstStep(Double A, Integer omega) {
+        setR(A * Math.sin(omega * getT()));
+        this.setT(this.getT() + this.getDt());
     }
-    
-    @Override
-    public void lastStep(){
 
+    @Override
+    public void lastStep() {
+        this.setT(this.getT() + this.getDt());
     }
 
     public void initializeValues() {

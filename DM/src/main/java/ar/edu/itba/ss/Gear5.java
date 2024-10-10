@@ -14,26 +14,17 @@ public class Gear5 extends Oscillator implements IntegrationMethod {
     public Gear5(Double m, Double k, Double gamma, Double r, Double v, Double a, Double t, Double dt) {
         super(m, k, gamma, r, v, a, t, dt);
     }
+
     @Override
-    public Oscillator create(){
+    public Oscillator create() {
         return new Gear5(getM(), getK(), getGamma(), getR(), getV(), getA(), getT(), getDt());
     }
 
     @Override
-    public void coupledStep(Double prevY, Double nextY){
+    public void coupledStep(Double prevY, Double nextY) {
 
     }
 
-
-    @Override
-    public void firstStep(){
-
-    }
-    
-    @Override
-    public void lastStep(){
-
-    }
     @Override
     public void initializeValues() {
         this.r3 = (-getK() * getV() - getGamma() * getA()) / getM();
@@ -72,6 +63,16 @@ public class Gear5 extends Oscillator implements IntegrationMethod {
 
     public Double calculate() {
         return (-getK() * rPred - getGamma() * vPred) / getM();
+    }
+
+    @Override
+    public void firstStep(Double A, Integer omega) {
+        setR(A * Math.sin(omega * getT()));
+    }
+
+    @Override
+    public void lastStep() {
+
     }
 
 }

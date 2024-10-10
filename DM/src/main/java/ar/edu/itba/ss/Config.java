@@ -16,7 +16,7 @@ public class Config {
     private Integer omega;
 
     public Config(Double mass, Double k, Double gamma, Double r0, Double v0, Double a0, Double t0, Double dt,
-            String method, Integer steps, Integer N,Double A,Integer omega) {
+            String method, Integer steps, Integer N, Double A, Integer omega) {
         this.mass = mass;
         this.k = k;
         this.gamma = gamma;
@@ -31,8 +31,6 @@ public class Config {
         this.A = A;
         this.omega = omega;
     }
-
-
 
     public Double getMass() {
         return mass;
@@ -109,8 +107,8 @@ public class Config {
     @Override
     public String toString() {
         return "Config [mass=" + mass + ", k=" + k + ", gamma=" + gamma + ", r0=" + r0 + ", v0=" + v0 + ", a0=" + a0
-                + ", t0=" + t0 + ", dt=" + dt + ", method=" + method + ", steps=" + steps + "]";
-
+                + ", t0=" + t0 + ", dt=" + dt + ", method=" + method + ", steps=" + steps + ", A=" + A + ", N=" + N
+                + ", omega=" + omega + "]";
     }
 
     public Integer getSteps() {
@@ -121,39 +119,27 @@ public class Config {
         this.steps = steps;
     }
 
+    public Integer getN() {
+        return N;
+    }
 
+    public void setN(Integer n) {
+        N = n;
+    }
 
-	public Integer getN() {
-		return N;
-	}
+    public Double getA() {
+        return A;
+    }
 
+    public void setA(Double a) {
+        A = a;
+    }
 
+    public Integer getOmega() {
+        return omega;
+    }
 
-	public void setN(Integer n) {
-		N = n;
-	}
-
-
-
-	public Double getA() {
-		return A;
-	}
-
-
-
-	public void setA(Double a) {
-		A = a;
-	}
-
-
-
-	public Integer getOmega() {
-		return omega;
-	}
-
-
-
-	public void setOmega(Integer omega) {
-		this.omega = omega;
-	}
+    public void setOmega(Integer omega) {
+        this.omega = omega;
+    }
 }
