@@ -33,7 +33,7 @@ public class Verlet extends Oscillator implements IntegrationMethod {
     }
 
     @Override
-    public void firstStep(Double A, Integer omega) {
+    public void firstStep(Double A, Double omega) {
         setR(A * Math.sin(omega * getT()));
         this.setT(this.getT() + this.getDt());
     }

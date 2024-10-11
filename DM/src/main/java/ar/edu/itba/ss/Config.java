@@ -13,10 +13,10 @@ public class Config {
     private Integer steps;
     private Integer N;
     private Double A;
-    private Integer omega;
+    private Double omega;
 
     public Config(Double mass, Double k, Double gamma, Double r0, Double v0, Double a0, Double t0, Double dt,
-            String method, Integer steps, Integer N, Double A, Integer omega) {
+            String method, Integer steps, Integer N, Double A, Double omega) {
         this.mass = mass;
         this.k = k;
         this.gamma = gamma;
@@ -135,11 +135,11 @@ public class Config {
         A = a;
     }
 
-    public Integer getOmega() {
+    public Double getOmega() {
         return omega;
     }
 
-    public void setOmega(Integer omega) {
+    public void setOmega(Double omega) {
         this.omega = omega;
     }
 }
