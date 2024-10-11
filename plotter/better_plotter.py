@@ -68,13 +68,14 @@ for folder in sorted(folders):
         plt.plot(
             t,
             max_amplitude_over_time,
-            label=f"Omega = {omega_value}",
+            label=f"Omega = {float(omega_value):.3g}",
             color=colors[idx],
         )
 
+    plt.xlim(left=0)
+    plt.ylim(bottom=0)
     plt.xlabel("Tiempo (s)")
     plt.ylabel("Amplitud máxima |r| (m)")
-    plt.title(f"Evolución de la Amplitud Máxima en el Tiempo para k = {k_value}")
     plt.legend()
     plt.grid(True)
     plt.show()
@@ -83,10 +84,12 @@ for folder in sorted(folders):
     plt.figure(figsize=(8, 5))
     omegas = list(map(float, omega_amplitudes.keys()))
     amplitudes_max = list(omega_amplitudes.values())
-    plt.plot(omegas, amplitudes_max, marker="o")
+    plt.plot(omegas, amplitudes_max, marker="o", linestyle="None")
+
+    plt.xlim(left=0)
+    plt.ylim(bottom=0)
 
     plt.xlabel("Omega (rad/s)")
     plt.ylabel("Amplitud máxima |r| (m)")
-    plt.title(f"Amplitud Máxima en Función de Omega para k = {k_value}")
     plt.grid(True)
     plt.show()

@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Valores de k entre 100 y 10000
-k_values=(100 1000 2500 5000 10000)
+k_values=(100 1000 2500 5000 9000)
 
 # Omega será variado cerca de omega0 (que es ~ sqrt(k/m))
 # Vamos a usar valores cercanos a omega0, pero no el valor exacto
 # Por ejemplo, valores: 0.8*omega0, 0.9*omega0, 1.1*omega0, 1.2*omega0
 m=0.001  # Masa según config.json
-omega_ratios=(0.8 0.9 1.1 1.2)
+omega_ratios=(0.8 0.85 0.9 0.95 1.1 1.2)
 
 # Calcular sin(pi/100) una vez para optimizar
-sin_value=$(echo "s (3.141592653589793 / 100)" | bc -l)
+sin_value=$(echo "s (3.141592653589793 / 101)" | bc -l)
 
 # Path to the config file
 config_file="../config.json"
@@ -27,9 +27,17 @@ do
     # Calcular omega usando el ratio y omega0
     omega=$(echo "$omega0 * $ratio" | bc -l)
 
-    # Use jq para actualizar k (entero) y omega (double) en config.json
+    # Calcular dt como 1/(100*omega)
+    dt=$(echo "1 / (100 * $omega)" | bc -l)
+
+    # Calcular steps para que steps * dt = 5 segundos
+    steps=$(echo "scale=0; 5 / $dt" | bc -l)
+
+    # Use jq para actualizar k, omega, dt, y steps en config.json
     jq --arg k_value "$k" '.k = ($k_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"
     jq --arg omega_value "$omega" '.omega = ($omega_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"
+    jq --arg dt_value "$dt" '.dt = ($dt_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"
+    jq --arg steps_value "$steps" '.steps = ($steps_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"
 
     # Crear la carpeta k_X si no existe
     mkdir -p "k_$k"
@@ -41,5 +49,6 @@ do
     mv output.csv "k_$k/output_$omega.csv"
   done
 done
+
 
 
