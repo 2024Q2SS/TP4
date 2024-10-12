@@ -1,39 +1,32 @@
 #!/bin/bash
 
-# Valores de k entre 100 y 10000
+# Definición de los valores de k y omega correspondientes
 k_values=(100 1000 2500 5000 9000)
-
-# Omega será variado cerca de omega0 (que es ~ sqrt(k/m))
-# Vamos a usar valores cercanos a omega0, pero no el valor exacto
-# Por ejemplo, valores: 0.8*omega0, 0.9*omega0, 1.1*omega0, 1.2*omega0
-m=0.001  # Masa según config.json
-omega_ratios=(0.8 0.85 0.9 0.95 1.1 1.2)
-
-# Calcular sin(pi/100) una vez para optimizar
-sin_value=$(echo "s (3.141592653589793 / 101)" | bc -l)
+w_values=(
+    "8.5 9 9.5 9.75 10 10.5 11"
+    "28 29 30 30.5 31 32 33"
+    "48 49 49.5 50 50.5 51 52"
+    "68 69 69.5 70 70.5 71 72"
+    "92 93 93.5 94 94.5 95 96"
+)
 
 # Path to the config file
 config_file="../config.json"
 
-# Loop sobre los valores de k
-for k in "${k_values[@]}"
-do
-  # Calcular omega0 para este k con sin(pi/100)
-  omega0=$(echo "sqrt($k / $m) * $sin_value" | bc -l)
+# Loop sobre los valores de k y omega
+for i in "${!k_values[@]}"; do
+  k="${k_values[$i]}"
+  omega_set=(${w_values[$i]})  # Obtener el conjunto de valores de omega correspondientes a k
 
-  # Loop sobre los ratios para omega
-  for ratio in "${omega_ratios[@]}"
-  do
-    # Calcular omega usando el ratio y omega0
-    omega=$(echo "$omega0 * $ratio" | bc -l)
-
+  # Loop sobre los valores de omega para el k actual
+  for omega in "${omega_set[@]}"; do
     # Calcular dt como 1/(100*omega)
     dt=$(echo "1 / (100 * $omega)" | bc -l)
 
     # Calcular steps para que steps * dt = 5 segundos
-    steps=$(echo "scale=0; 5 / $dt" | bc -l)
+    steps=$(echo "scale=0; 15 / $dt" | bc -l)
 
-    # Use jq para actualizar k, omega, dt, y steps en config.json
+    # Usar jq para actualizar k, omega, dt, y steps en config.json
     jq --arg k_value "$k" '.k = ($k_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"
     jq --arg omega_value "$omega" '.omega = ($omega_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"
     jq --arg dt_value "$dt" '.dt = ($dt_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"
@@ -49,6 +42,5 @@ do
     mv output.csv "k_$k/output_$omega.csv"
   done
 done
-
 
 

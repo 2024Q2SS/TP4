@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the range of omega values
-omega_values=(300 600 1000 2000 3000)
+omega_values=(8 9 9.5 9.75 )
 
 # Path to the config file
 config_file="../config.json"
