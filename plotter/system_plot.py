@@ -27,6 +27,12 @@ analitical_values = [analitical(t0 + i * dt) for i in range(steps)]
 analitical_steps = [t0 + i * dt for i in range(steps)]
 
 
+def format_sci_notation(value):
+    exponent = int("{:e}".format(value).split("e")[1])
+    base = float("{:e}".format(value).split("e")[0])
+    return r"${:.2f} \times 10^{{{}}}$".format(base, exponent)
+
+
 with open("../DM/Verlet_output.csv") as verlet_f:
     with open("../DM/Beeman_output.csv") as beeman_f:
         with open("../DM/Gear5_output.csv") as gear5_f:
@@ -39,26 +45,26 @@ with open("../DM/Verlet_output.csv") as verlet_f:
             verlet_ecm = np.sum((verlet_df["r"] - analitical_values) ** 2) / steps
             beeman_ecm = np.sum((beeman_df["r"] - analitical_values) ** 2) / steps
             gear5_ecm = np.sum((gear5_df["r"] - analitical_values) ** 2) / steps
-            fig, ax = plt.subplots(figsize=(10, 5))
+            fig, ax = plt.subplots(figsize=(12, 8))
 
             ax.plot(
                 verlet_df["t"],
                 verlet_df["r"],
-                label=f"Verlet (ECM= {verlet_ecm:.4f})",
+                label=rf"Verlet ECM={format_sci_notation(verlet_ecm)}",
                 color="red",
                 linestyle="dashed",
             )
             ax.plot(
                 beeman_df["t"],
                 beeman_df["r"],
-                label=f"Beeman (ECM= {beeman_ecm:.4f})",
+                label=rf"Beeman ECM={format_sci_notation(beeman_ecm)}",
                 color="black",
                 linestyle="dashed",
             )
             ax.plot(
                 gear5_df["t"],
                 gear5_df["r"],
-                label=f"Gear5 (ECM= {gear5_ecm:.4f})",
+                label=rf"Gear5 ECM={format_sci_notation(gear5_ecm)}",
                 color="green",
                 linestyle="dashed",
             )
@@ -69,9 +75,10 @@ with open("../DM/Verlet_output.csv") as verlet_f:
                 color="blue",
                 linestyle="dashed",
             )
-            ax.legend(shadow=True, fancybox=True, loc=(1.05, 0.7))
-            ax.set_xlabel("t (s)")
-            ax.set_ylabel("posición (m)")
+            ax.tick_params(axis="both", which="major", labelsize=20)
+            ax.legend(shadow=True, fancybox=True, loc=(1.05, 0.7), fontsize=20)
+            ax.set_ylabel("posición (m)", fontsize=20)
+            ax.set_xlabel("t (s)", fontsize=20)
             # ax.set_title("Comparacion de metodos")
 
             plt.show()
@@ -89,23 +96,23 @@ with open("../DM/Verlet_output.csv") as verlet_f:
             analitical_zoom_steps = [t for t in analitical_steps if t_min < t <= t_max]
             analitical_zoom_values = [analitical(t) for t in analitical_zoom_steps]
 
-            fig, ax_zoom = plt.subplots(figsize=(10, 5))
+            fig, ax_zoom = plt.subplots(figsize=(12, 8))
             ax_zoom.plot(
                 verlet_df["t"][zoom_mask],
                 verlet_df["r"][zoom_mask],
-                label=f"Verlet (ECM= {verlet_ecm:.4f})",
+                label=rf"Verlet ECM={format_sci_notation(verlet_ecm)}",
                 color="red",
             )
             ax_zoom.plot(
                 beeman_df["t"][zoom_mask],
                 beeman_df["r"][zoom_mask],
-                label=f"Beeman (ECM= {beeman_ecm:.4f})",
+                label=rf"Beeman ECM={format_sci_notation(beeman_ecm)}",
                 color="black",
             )
             ax_zoom.plot(
                 gear5_df["t"][zoom_mask],
                 gear5_df["r"][zoom_mask],
-                label=f"Gear5 (ECM= {gear5_ecm:.4f})",
+                label=rf"Gear5 ECM={format_sci_notation(gear5_ecm)}",
                 color="green",
                 linestyle="dashed",
             )
@@ -115,10 +122,11 @@ with open("../DM/Verlet_output.csv") as verlet_f:
                 label="Analitical",
                 color="blue",
             )
-            ax_zoom.legend(shadow=True, fancybox=True, loc=(1.05, 0.7))
-            ax_zoom.set_ylabel("posición (m)")
-            ax_zoom.set_xlabel("t (s)")
+            ax_zoom.legend(shadow=True, fancybox=True, loc=(1.05, 0.7), fontsize=20)
+            ax_zoom.set_ylabel("posición (m)", fontsize=20)
+            ax_zoom.set_xlabel("t (s)", fontsize=20)
             ax_zoom.set_xticks(verlet_df["t"][zoom_mask])
+            ax_zoom.tick_params(axis="both", which="major", labelsize=20)
             plt.show()
             plt.savefig("comparacion_metodos_zoom.png")
             plt.close()

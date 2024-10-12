@@ -56,16 +56,22 @@ public class CoupledOscillator {
     }
 
     public void run() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("t");
+        for (int i = 0; i < oscillators.size(); i++) {
+            sb.append(",r" + i);
+        }
         try (FileWriter writer = new FileWriter("output.csv")) {
-            writer.write("t,r,v,a\n");
+            writer.write(sb.toString() + "\n");
             Double prevY = config.getR0();
             Double currentY;
             Oscillator aux;
+            sb = new StringBuilder();
+            sb.append(config.getT0());
             for (Oscillator toWrite : oscillators) {
-                writer.write(toWrite.getT() + "," + toWrite.getR() + "," + toWrite.getV() + ","
-                        + toWrite.getA() + "\n");
+                sb.append("," + toWrite.getR());
             }
-
+            writer.write(sb.toString() + "\n");
             for (int i = 0; i < config.getSteps(); i++) {
                 for (int j = 0; j < oscillators.size(); j++) {
                     aux = oscillators.get(j);
@@ -79,10 +85,12 @@ public class CoupledOscillator {
                     }
                     prevY = currentY;
                 }
+                sb = new StringBuilder();
+                sb.append(oscillators.get(0).getT());
                 for (Oscillator toWrite : oscillators) {
-                    writer.write(toWrite.getT() + "," + toWrite.getR() + "," + toWrite.getV() + ","
-                            + toWrite.getA() + "\n");
+                    sb.append("," + toWrite.getR());
                 }
+                writer.write(sb.toString() + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
