@@ -21,6 +21,10 @@ public class App {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        config.setV0(-config.getGamma() / (2 * config.getMass()));
+
+        config.setA0((-config.getK() * config.getR0() - config.getGamma() * config.getV0()) / config.getMass());
+
     }
 
     public void run() {
