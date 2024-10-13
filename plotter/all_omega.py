@@ -18,7 +18,9 @@ w_values = [
 colors = plt.cm.plasma(np.linspace(0, 1, len(k_values)))
 
 # Crear el gráfico
-plt.figure(figsize=(12, 8))
+fig, ax = plt.subplots(figsize=(12, 8))
+
+r_columns = [f"r{i}" for i in range(100)]
 
 # Loop sobre los valores de k y omega
 for i, k in enumerate(k_values):
@@ -33,20 +35,31 @@ for i, k in enumerate(k_values):
         # Leer el CSV para obtener la amplitud máxima (última columna "a")
         try:
             data = pd.read_csv(output_file)
-            amplitudes_max.append(data["a"].abs().max())  # Calcular la amplitud máxima
+            amplitudes_max.append(
+                np.abs(data[r_columns]).max().max()
+            )  # Calcular la amplitud máxima
         except FileNotFoundError:
             print(f"Archivo no encontrado: {output_file}")
             continue
 
     # Graficar la amplitud máxima en función de omega, conectando los puntos
-    plt.plot(omegas, amplitudes_max, marker="o", color=colors[i], label=f"k = {k}")
+    ax.plot(omegas, amplitudes_max, marker="o", color=colors[i], label=f"k = {k}")
 
 # Personalizar el gráfico
-plt.yscale("log")
-plt.xlabel("Omega (rad/s)", fontsize=20)
-plt.ylabel("Amplitud máxima |r| (m)", fontsize=20)
-plt.tick_params(axis="both", which="major", labelsize=20)
-plt.legend(shadow=True, fancybox=True, loc=(1.05, 0.7), fontsize=20)
-plt.grid(True)
-plt.legend(title="Valores de k")
+# plt.yscale("log")
+plt.subplots_adjust(right=0.8)
+ax.set_xlabel("Omega (rad/s)", fontsize=20)
+ax.set_ylabel("Amplitud máxima |r| (m)", fontsize=20)
+ax.set_ylim(bottom=0)
+ax.set_xlim(left=0)
+ax.tick_params(axis="both", which="major", labelsize=20)
+ax.legend(
+    shadow=True,
+    fancybox=True,
+    bbox_to_anchor=(1.5, 0.7),
+    loc="upper left",
+    fontsize=20,
+)
+ax.grid(True)
+ax.legend(title="Valores de k")
 plt.show()

@@ -11,32 +11,23 @@ with open("../config.json") as f:
     config = json.load(f)
 N = config["N"]  # Número de osciladores
 
+r_columns = [f"r{i}" for i in range(N)]
+
 
 # Función para leer el CSV y obtener la amplitud máxima en cada instante de tiempo
 def get_amplitude_data(filename):
     # Leer el archivo CSV sin redondeos o conversiones
-    data = pd.read_csv(filename)
-
-    # Extraer la columna de tiempo (t) asegurando que no hay pérdida de precisión
-    t = data["t"].unique()
+    df = pd.read_csv(filename)
 
     # Inicializar una lista para las amplitudes máximas por instante de tiempo
-    max_amplitudes = []
+    # Calcular el valor absoluto máximo entre r0, r1, ..., r99 para cada tiempo
+    posiciones = df.loc[:, 'r0':'r99']
+    max_amplitude_over_time = posiciones.abs().max(axis=1)
 
-    # Calcular la amplitud máxima para cada instante de tiempo sin redondeos
-    for i in range(len(t)):
-        # Obtener las posiciones (r) de los N osciladores en el instante i sin perder precisión
-        positions = data["r"].iloc[i * N : (i + 1) * N]
-
-        # Calcular el módulo de la amplitud para cada oscilador sin redondear
-        amplitudes = np.abs(positions)
-
-        # Guardar la amplitud máxima de los osciladores en este instante
-        max_amplitudes.append(np.max(amplitudes))
-
-    return t, np.array(max_amplitudes), np.max(max_amplitudes)
-
-
+    # Calcular la amplitud máxima global
+    max_amplitude_global = max_amplitude_over_time.max()
+    t = df["t"]
+    return np.array(t), np.array(max_amplitude_over_time), np.array(max_amplitude_global)
 # Lista de carpetas que contienen los resultados para cada k dentro de ../DM/
 folders = glob.glob("../DM/k_*")
 
@@ -86,13 +77,13 @@ for folder in sorted(folders):
     max_omega = sorted_omegas[0]
 
     # Encontrar las dos omegas más cercanas (una mayor y otra menor) sin perder precisión
-    closest_omegas = sorted(sorted_omegas, key=lambda x: abs(x - max_omega))[1:3]
+    closest_omegas = sorted(sorted_omegas, key=lambda x: abs(x - max_omega))[1:4]
 
     # Unir la omega máxima con las dos más cercanas sin redondeos
-    omegas_to_plot = [max_omega] + closest_omegas
+    omegas_to_plot = closest_omegas
 
     # Graficar la evolución de la amplitud máxima en el tiempo para las tres omegas seleccionadas
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 8))
     for idx, omega in enumerate(sorted(omegas_to_plot)):
         t, max_amplitude_over_time = all_data[omega]
         plt.plot(
@@ -101,22 +92,43 @@ for folder in sorted(folders):
 
     plt.xlim(left=0)
     plt.ylim(bottom=0)
-    plt.xlabel("Tiempo (s)")
-    plt.ylabel("Amplitud máxima |r| (m)")
-    plt.legend()
+    plt.xlabel("Tiempo (s)", fontsize=20)
+    plt.ylabel("Amplitud máxima |r| (m)", fontsize=20)
+    plt.tick_params(axis="both", which="major", labelsize=20)
+    plt.legend(fancybox=True, shadow=True, loc=(1.05, 0.7), fontsize=20)
     plt.grid(True)
     plt.show()
 
+    # Graficar la evolución de la amplitud máxima en el tiempo para las tres omegas seleccionadas
+    plt.figure(figsize=(12, 8))
+    for idx, omega in enumerate(sorted(omegas_to_plot)):
+        t, max_amplitude_over_time = all_data[omega]
+    
+        # Zoom in on the last 20 seconds
+        #zoom_start = mint(t) - 40  # Determine the start of the zoom (last 20 seconds)
+        plt.plot(
+            t, max_amplitude_over_time, label=f"Omega = {omega:.3f}", color=colors[idx]
+        )
+
+    # Set xlim to zoom in on the last 20 seconds
+    plt.xlim(left=0, right=15)  # Left boundary is last 20 seconds, right is max time
+    plt.ylim(bottom=0)
+    plt.xlabel("Tiempo (s)", fontsize=20)
+    plt.ylabel("Amplitud máxima |r| (m)", fontsize=20)
+    plt.tick_params(axis="both", which="major", labelsize=20)
+    plt.legend(fancybox=True, shadow=True, loc=(1.05, 0.7), fontsize=20)
+    plt.grid(True)
+    plt.show()
     # Graficar la amplitud máxima para cada omega
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(12, 8))
     omegas = list(omega_amplitudes.keys())
     amplitudes_max = list(omega_amplitudes.values())
     plt.plot(omegas, amplitudes_max, marker="o", linestyle="None")
 
     plt.xticks(omegas)
     plt.ylim(bottom=0)
-
-    plt.xlabel("Omega (rad/s)")
-    plt.ylabel("Amplitud máxima |r| (m)")
+    plt.tick_params(axis="both", which="major", labelsize=20)
+    plt.xlabel("Omega (rad/s)", fontsize = 20)
+    plt.ylabel("Amplitud máxima |r| (m)", fontsize = 20)
     plt.grid(True)
     plt.show()

@@ -3,13 +3,12 @@
 # Definición de los valores de k y omega correspondientes
 k_values=(100 1000 2500 5000 9000)
 w_values=(
-    "8.5 9 9.5 9.75 10 10.5 11"
+    "8.5 9 9.5 9.75 10.25 10.5 11"
     "28 29 30 30.5 31 32 33"
     "48 49 49.5 50 50.5 51 52"
-    "68 69 69.5 70 70.5 71 72"
+    "68 69 69.5 70 70.5 71.25 72"
     "92 93 93.5 94 94.5 95 96"
 )
-
 # Path to the config file
 config_file="../config.json"
 
@@ -24,7 +23,7 @@ for i in "${!k_values[@]}"; do
     dt=$(echo "1 / (100 * $omega)" | bc -l)
 
     # Calcular steps para que steps * dt = 5 segundos
-    steps=$(echo "scale=0; 15 / $dt" | bc -l)
+    steps=$(echo "scale=0; 100 / $dt" | bc -l)
 
     # Usar jq para actualizar k, omega, dt, y steps en config.json
     jq --arg k_value "$k" '.k = ($k_value | tonumber)' "$config_file" > temp_config.json && mv temp_config.json "$config_file"

@@ -38,6 +38,6 @@ for t in data["t"]:
         axis="both", which="major", labelsize=20
     )  # Ajustar límites y según sea necesario
     plt.savefig(
-        f"blob3/grafico_t_{t:.4f}.png"
+        f"blob4/grafico_t_{t:.4f}.png"
     )  # Guardar la figura con el tiempo en centésimas
     plt.close()  # Cerrar la figura para liberar memoria
